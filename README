@@ -1,0 +1,15 @@
+# Script que crea un archivo log de los ítems publicados para los seller_id indicados
+# Versión en Python 3.7.4
+=====================================================================================
+
+
+CÓMO USAR:
+
+1. Asegurarse de tener Python 3.X instalado. Hacerlo en caso contrario
+2. Crear un directorio para guardar el script en caso de no existir
+3. Abrir terminal
+4. Tipear: ~/<directorio_del_script>
+5. Hacer el script ejecutable ( chmod +x )
+6. Tipear: python ./items_by_seller-id.py
+
+¡Listo! El script generará el archivo items-info.log en el mismo directorio en que se encuentre el script.
