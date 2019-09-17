@@ -12,43 +12,62 @@ import requests
 url_api = "https://api.mercadolibre.com"
 url_api_MLA_seller_id = url_api + "/sites/MLA/search?seller_id="
 url_api_items = url_api + "/items?ids="
+url_api_ctgs = url_api + "/categories?id="
 
-seller_id = "81644614"
+seller_id = [ "81644614", "183952086", "70384506", "93829058" ]
+
 delimiter = ","
 
+items_offset = 50000
+
+new_line = "\n"
+separator
 log_content
 log_file
 
 ##################################
 
+# recorrer lista de vendedores
+for uid in seller_id:
 
-# obtener ítems del seller_id=81644614
-seller_req = requests.get( url_api_MLA_seller_id + seller_id )
+    if uid==2:
+        separator = new_line + "----------------------------" + new_line
+    elif uid==len(seller_id):
+        separator = ""
 
-# deserializar la estructura JSON a diccionario
-seller_req_json = seller_req.json()
+    # obtener ítems del seller_id
+    seller_req = requests.get( url_api_MLA_seller_id + uid )
 
-# obtener la lista de IDs de los ítems publicados por el vendedor
-seller_results = req_json["results"]
+    # deserializar la estructura JSON a diccionario
+    seller_req_json = seller_req.json()
 
-# convertir la lista a cadena separada por comas, para pasar mediante GET a la API
-items_list = delimiter.join( results )
+    # obtener la lista de IDs de los ítems publicados por el vendedor
+    seller_results = req_json[ "results" ]
+    
+    #acotamos al offset
+    if ( len( seller_results ) > items_offset ):
+        
 
-# obtener la info de cada ítem publicado
-items_req = requests.get( url_api_items + items_list )
+    # convertir la lista a cadena separada por comas, para pasar mediante GET a la API
+    items_list = delimiter.join( results )
 
-# deserializar la estructura JSON a diccionario
-items_req_json = items_req.json()
+    # obtener la info de cada ítem publicado
+    items_req = requests.get( url_api_items + items_list )
 
-# recorrer ítems para generar log_content
-for id in items_req_json:
-	content_item_title = items_req_json[id]["title"]
-	content_category_id = items_req_json[id]["category_id"]
-	content_category_name = items_req_json[id]["category_name"]
-	content = "ITEM " + id + ": " + content_item_title + content_category_id + content_category_name + "\n"
-	log_content = content + "PUBLICACIONES DE SELLER_ID: " + seller_id + content
+    # deserializar la estructura JSON a diccionario
+    items_req_json = items_req.json()
+
+    # recorrer ítems para generar log_content
+    for iid in items_req_json:
+        content_item_title = items_req_json[ iid ][ "title" ]
+        content_ctg_id = items_req_json[ iid ][ "category_id" ]
+        content_ctg_req = requests.get( url_api_ctgs + content_ctg_id )
+        content_ctg_req_json = seller_req.json()
+        content_ctg_name = content_ctg_req_json[ "name" ]
+        content = " ITEM " + iid + ": " + content_item_title + " -- " + content_ctg_id + " -- " + content_ctg_name
+        log_content = log_content + separator + content + "PUBLICACIONES DE SELLER_ID: " + uid + content
 
 # crear archivo log
-log_file = open("items-info.log","w+")
-log_file.write(log_content)
+log_file = open( "items-info.log","w+" )
+log_file.write( log_content )
 log_file.close()
