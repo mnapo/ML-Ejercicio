@@ -1,10 +1,9 @@
 ##################################
 
-# Script que crea un archivo log de los ítems publicados para los seller_id indicados
-# Versión en Python 3.7.4
-# Última modificación 16/09/19
-# ATENCIÓN: FALTA TESTEAR Y DEBUGUEAR
-
+'''
+Script que crea un archivo log de los ítems publicados para los seller_id indicados
+Versión en Pseudocódigo
+'''
 
 # se importa la librería requests
 import requests
@@ -15,27 +14,41 @@ url_api_MLA_seller_id = url_api + "/sites/MLA/search?seller_id="
 url_api_items = url_api + "/items?ids="
 
 seller_id = "81644614"
-log_content = ""
 delimiter = ","
+
+log_content
+log_file
 
 ##################################
 
 
-# se obtienen los items del seller_id=81644614
+# obtener ítems del seller_id=81644614
 seller_req = requests.get( url_api_MLA_seller_id + seller_id )
 
-# se deserializa la estructura JSON a diccionario
-req_json = req.json()
+# deserializar la estructura JSON a diccionario
+seller_req_json = seller_req.json()
 
-# se obtiene la lista de IDs de los ítems publicados por el vendedor
-results = req_json[ "results" ]
+# obtener la lista de IDs de los ítems publicados por el vendedor
+seller_results = req_json["results"]
 
-# se convierte la lista a cadena separada por comas, para pasar mediante GET a la API
+# convertir la lista a cadena separada por comas, para pasar mediante GET a la API
 items_list = delimiter.join( results )
 
-# se obtiene la info de cada ítem publicado
+# obtener la info de cada ítem publicado
 items_req = requests.get( url_api_items + items_list )
 
+# deserializar la estructura JSON a diccionario
+items_req_json = items_req.json()
 
-# se parsea la lista de IDs de ítems como cadena 
-# items_list = json.dumps( json.loads( results ), indent = 4 )
+# recorrer ítems para generar log_content
+for id in items_req_json:
+	content_item_title = items_req_json[id]["title"]
+	content_category_id = items_req_json[id]["category_id"]
+	content_category_name = items_req_json[id]["category_name"]
+	content = "ITEM " + id + ": " + content_item_title + content_category_id + content_category_name + "\n"
+	log_content = content + "PUBLICACIONES DE SELLER_ID: " + seller_id + content
+
+# crear archivo log
+log_file = open("items-info.log","w+")
+log_file.write(log_content)
+log_file.close()
