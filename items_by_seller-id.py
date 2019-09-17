@@ -2,7 +2,7 @@
 
 '''
 Script que crea un archivo log de los ítems publicados para los seller_id indicados
-Versión en Pseudocódigo
+Versión en Pseudocódigo (pensado para Python 3.X)
 '''
 
 # se importa la librería requests
