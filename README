@@ -12,3 +12,11 @@ CÓMO USAR:
 6. Tipear: python ./items_by_seller-id.py
 
 ¡Listo! El script generará el archivo items-info.log en el mismo directorio en que se encuentre el script.
+
+-------------------------------------------------------
+
+
+PARA ELEGIR QUÉ VENDEDORES SE DESEAN CONSULTAR:
+
+1. Ubicar la lista seller_id
+2. Agregar las IDs de vendedor como cadena
