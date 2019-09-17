@@ -45,8 +45,11 @@ for uid in seller_id:
     seller_results = req_json[ "results" ]
     
     #acotamos al offset
-    if ( len( seller_results ) > items_offset ):
-        
+    seller_results_len = len( seller_results )
+    if ( seller_results_len > items_offset ):
+        for res_id in range ( seller_results_len, items_offset, -1):
+            seller_results.pop()
+            #print( "se dejó afuera el item " + res_id )
 
     # convertir la lista a cadena separada por comas, para pasar mediante GET a la API
     items_list = delimiter.join( results )
